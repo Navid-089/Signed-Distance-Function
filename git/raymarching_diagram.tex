@@ -1,0 +1,25 @@
+% raymarching_diagram.tex  (NO \begin{frame} ... \end{frame} here)
+\begin{tikzpicture}[scale=1]
+  % Camera
+  \node[eye] (eye) at (0,0) {\faIcon{eye}};
+
+  % Ray path
+  \draw[ray] (eye) -- (7,0);
+
+  % --- Objects (two SDF shapes) ---
+  \node[sphere, fill=ObjectColor!35, minimum size=1.0cm] at (3.6,1.0) {};
+  \node[above right] at (4.1,0.6) {\tiny \objectcolor{Object A}};
+
+  \node[sphere, fill=ObjectColor!40, minimum size=2.0cm] at (6.5,0.0) {};
+  \node[below] at (6.5,-1.0) {\footnotesize \objectcolor{Object B}};
+
+  % --- March steps (appear one by one) ---
+  \onslide<1->{\draw[AccentColor, thick, dashed] (1.6,0) circle (1.6);}  % r1
+  \onslide<2->{\draw[AccentColor, thick, dashed] (3.2,0) circle (0.25);}  % r2
+  \onslide<3->{\draw[AccentColor, thick, dashed] (3.45,0) circle (0.18);} % r3
+  \onslide<4->{\draw[AccentColor, thick, dashed] (3.63,0) circle (0.12);} % r4
+  \onslide<5->{\draw[AccentColor, thick, dashed] (3.75,0) circle (0.90);} % r5
+  \onslide<6->{\draw[AccentColor, thick, dashed] (4.65,0) circle (0.60);} % r6
+  \onslide<7->{\draw[AccentColor, thick, dashed] (5.25,0) circle (0.30);} % r7
+
+\end{tikzpicture}

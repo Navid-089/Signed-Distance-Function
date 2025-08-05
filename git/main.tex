@@ -1,0 +1,205 @@
+\include{Preamble}
+
+\title{Signed Distance Fields}
+\subtitle{A Modern Approach to Shape Representation in Graphics}
+\author{Md. Miraj Hasan (2005084)\\
+Wahid Al Azad Navid (2005089)}
+\institute{Department of Computer Science and Engineering\\Bangladesh University of Engineering and Technology (BUET)}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Index}
+  \vspace{0.5cm}
+  \tiny
+  \tableofcontents
+\end{frame}
+
+\section{Introduction}
+\begin{frame}{What are Signed Distance Fields?}
+  \begin{conceptbox}{Definition}
+    A \textbf{Signed Distance Field (SDF)} is a function that gives the shortest distance between any point and the surface of a shape.
+    \\~\\
+    \pause % First pause: show only the definition above
+    The sign indicates:
+    \begin{itemize}
+      \item<2-> Negative: \textit{inside} the shape
+      \item<3-> Positive: \textit{outside} the shape
+      \item<4-> Zero: \textit{on the surface}
+    \end{itemize}
+  \end{conceptbox}
+\end{frame}
+
+\section{Mathematical Foundation}
+\begin{frame}{Mathematical Definition of SDF}
+  \begin{mathbox}{Formal Expression}
+    \[
+      f(\mathbf{x}) = \pm \min_{\mathbf{p} \in \partial \Omega} \|\mathbf{x} - \mathbf{p}\|
+    \]
+    \pause
+    \begin{itemize}[<+->]
+      \item $\mathbf{x}$ = arbitrary point
+      \item $\partial \Omega$ = surface boundary
+      \item $f(\mathbf{x}) < 0$ if inside, $> 0$ if outside
+    \end{itemize}
+  \end{mathbox}
+\end{frame}
+
+
+\section{Applications}
+\begin{frame}{Where are SDFs Used?}
+  \begin{itemize}
+    \item Real-time rendering and raymarching
+    \item Font rendering and anti-aliasing
+    \item Collision detection and physics
+    \item Procedural modeling and morphing
+    \item Implicit surfaces and shape blending
+  \end{itemize}
+\end{frame}
+
+\section{Basic Shapes as SDFs}
+\begin{frame}{SDFs for Primitive Shapes}
+  \begin{itemize}
+    \item \textbf{Sphere:} $f(\mathbf{x}) = \|\mathbf{x} - \mathbf{c}\| - r$
+    \item \textbf{Box:} Uses component-wise signed distance
+    \item \textbf{Plane, Torus, etc.}: Custom distance functions
+  \end{itemize}
+  \begin{conceptbox}{Key Benefit}
+    Complex shapes can be formed using simple operations like union, intersection, and subtraction.
+  \end{conceptbox}
+\end{frame}
+
+\section{SDF Raymarching}
+\begin{frame}{Raymarching with SDFs}
+  \begin{conceptbox}{Algorithm}
+    \begin{enumerate}
+      \item<1-> Cast a ray from the eye
+      \item<2-> At each step, query the SDF to get the distance to the closest object
+      \item<3-> Advance along the ray by that distance
+      \item<4-> Stop when distance $< \varepsilon$ (or max steps)
+    \end{enumerate}
+  \end{conceptbox}
+\end{frame}
+
+\begin{frame}{Raymarching with Multiple Objects}
+  \centering
+  \vspace{0.5cm}
+  % No \only<5-> here. Let the picture’s own <1->, <2->… drive the animation.
+  \resizebox{0.8\linewidth}{!}{\input{raymarching_diagram.tex}}
+\end{frame}
+
+
+
+
+
+\section{Font Rendering}
+\begin{frame}{High-Quality Fonts with SDFs}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{conceptbox}{Valve's Technique}
+        \begin{itemize}
+          \item Glyphs stored as SDFs in textures
+          \item Smooth scaling and edge rendering
+          \item Great for HUDs and UIs in games
+        \end{itemize}
+      \end{conceptbox}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \resizebox{\linewidth}{!}{
+        \input{sdf_font_diagram.tex}
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Collision Detection}
+\begin{frame}{Collision Detection with SDFs}
+  \begin{conceptbox}{Key Idea}
+    The signed distance tells how far one object is from another. 
+    If the value is negative, it means collision.
+  \end{conceptbox}
+
+  \begin{itemize}
+    \item<1-> Efficient for character and object physics
+    \item<2-> Simple penetration depth calculation
+    \item<3-> Used in soft-body and rigid-body physics engines
+  \end{itemize}
+
+  \vspace{0.5cm}
+  \centering
+  \only<4->{\resizebox{0.4\linewidth}{!}{\input{sdf_collision_diagram.tex}}}
+\end{frame}
+
+
+
+\section{Procedural Modeling}
+\begin{frame}{Procedural Modeling and Morphing}
+  \begin{conceptbox}{Using SDF Operations}
+    You can build complex models using:
+    \begin{itemize}
+      \item \texttt{Union}: $f = \min(f_1, f_2)$
+      \item \texttt{Intersection}: $f = \max(f_1, f_2)$
+      \item \texttt{Difference}: $f = \max(f_1, -f_2)$
+    \end{itemize}
+  \end{conceptbox}
+
+  \vspace{0.3cm}
+  \centering
+  \resizebox{0.75\linewidth}{!}{\input{sdf_procedural_modeling.tex}}
+\end{frame}
+
+\section{Shape Blending}
+\begin{frame}{Implicit Surfaces and Blending}
+  \begin{conceptbox}{Smooth Transitions}
+    \only<1->{SDFs allow smooth blending between shapes using interpolation:}
+    \only<2->{\[
+      f(x) = \text{lerp}(f_1(x), f_2(x), \alpha)
+    \]}
+    \only<3->{or soft union: \[
+      f = -\log(e^{-k f_1} + e^{-k f_2})/k
+    \]}
+  \end{conceptbox}
+
+  \vspace{0.3cm}
+  \centering
+  \only<4->{\resizebox{0.75\linewidth}{!}{\input{sdf_blending_diagram.tex}}}
+\end{frame}
+
+
+
+
+\section{Generating SDFs}
+\begin{frame}{How are SDFs Generated?}
+  \begin{itemize}
+    \item \textbf{Analytical}: Direct formulas for simple shapes
+    \item \textbf{Voxel-based}: Grids for complex models
+    \item \textbf{From images}: Euclidean distance transform
+    \item \textbf{GPU-based}: Jump Flood Algorithm (JFA)
+  \end{itemize}
+\end{frame}
+
+\section{Modern Extensions}
+\begin{frame}{Recent Innovations}
+  \begin{itemize}
+    \item \textbf{Neural SDFs}: Learnable representations (e.g., NeRF)
+    \item \textbf{Volumetric rendering}: Clouds, fog, soft shadows
+    \item \textbf{SDF octrees}: Efficient memory and level-of-detail
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{Conclusion}
+  \begin{conceptbox}{Key Takeaways}
+    \begin{itemize}
+      \item Compact, efficient way to represent shapes
+      \item Ideal for GPU and real-time applications
+      \item Extensible to AI, physics, VFX, and more
+    \end{itemize}
+  \end{conceptbox}
+\end{frame}
+
+\end{document}
